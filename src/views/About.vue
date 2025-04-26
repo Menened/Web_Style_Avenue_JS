@@ -99,5 +99,4 @@ export default {
 </script>
 
 <style scoped>
-/* Здесь будут ваши стили из style.css, относящиеся к странице About */
 </style> 

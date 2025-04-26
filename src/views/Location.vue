@@ -183,20 +183,17 @@ export default {
       }
     },
     handleSubmit() {
-      // Validate all fields
       this.validateName();
       this.formatPhone();
       this.validateEmail();
 
-      // Check if there are any errors
       if (this.nameError || this.phoneError || this.emailError) {
         return;
       }
 
-      // If all validations pass, show the modal
+
       this.showModal = true;
       
-      // Reset the form
       this.resetForm();
     },
     resetForm() {

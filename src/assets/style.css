@@ -528,3 +528,62 @@ th {
         font-size: 3rem;
     }
 }
+
+.profile-slider {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: #FFF;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.profile-slider.active {
+    right: 0;
+}
+
+.profile-slider__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-slider__title {
+    font-family: 'Arvo Bold', sans-serif;
+    font-size: 1.5rem;
+    color: #542B0D;
+    margin: 0;
+}
+
+.profile-slider__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #542B0D;
+    font-size: 1.2rem;
+}
+
+.profile-slider__content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-slider__link {
+    text-decoration: none;
+    color: #542B0D;
+    font-family: 'Arial', sans-serif;
+    font-size: 1.1rem;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.profile-slider__link:hover {
+    background-color: #F7E3D4;
+}

@@ -16,7 +16,7 @@
             <a class="header__button">
               <img src="/img/cart.png" alt="Cart" class="header__icon">
             </a>
-            <a class="header__button">
+            <a class="header__button" @click="toggleSlider">
               <img src="/img/profile.png" alt="Profile" class="header__icon">
             </a>
           </div>
@@ -32,16 +32,36 @@
         </div>
       </div>
     </main>
+    <HeaderSlider :isOpen="isSliderOpen" @close="closeSlider" />
   </div>
-  
 </template>
 
 <script>
+import HeaderSlider from '@/components/HeaderSlider.vue'
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  components: {
+    HeaderSlider
+  },
+  data() {
+    return {
+      isSliderOpen: false
+    }
+  },
+  methods: {
+    toggleSlider() {
+      this.isSliderOpen = !this.isSliderOpen
+    },
+    closeSlider() {
+      this.isSliderOpen = false
+    }
+  }
 }
 </script>
 
 <style scoped>
-/* Здесь будут ваши стили из style.css, относящиеся к главной странице */
+.header__button {
+  cursor: pointer;
+}
 </style> 
