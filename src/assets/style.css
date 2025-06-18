@@ -29,6 +29,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     margin: 0;
     background-color: #FFF;
+    position: static;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
 }
 
 .header_container {
@@ -40,6 +45,8 @@
     padding-right: 100px;
     padding-top: 5px;
     padding-bottom: 10px;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .header_logo {
@@ -115,32 +122,38 @@
 body {
     margin: 0;
     padding: 0;
-}
-
-.body{
-    margin: 0;
-    background-image: url('img/background.avif');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+.body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
 .body_profile {
     margin: 0;
     background-image: none;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 main {
-    flex: 1;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 65px;
 }
-about main{
+
+.location_container {
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .box {
@@ -193,6 +206,7 @@ about main{
     letter-spacing: 2px;
     margin-top: 15px;
 }
+
 .location_dots {
     display: flex;
     justify-content: center;
@@ -200,6 +214,7 @@ about main{
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 .location_dot {
     width: 10px;
     height: 10px;
@@ -242,11 +257,12 @@ about main{
 }
 
 .location_item-text-link {
-        font-family: 'Arial', sans-serif;
-        font-size: 1rem;
-        color:  #D87830;
-        margin: 0;
-    }
+    font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    color: #D87830;
+    margin: 0;
+}
+
 .location_form {
     display: flex;
     flex-direction: column;
@@ -305,12 +321,15 @@ about main{
 .form_button:hover {
     background-color: #C66A25;
 }
+
 .footer {
     padding: 20px;
     text-align: center;
-    margin-top: auto;
+    flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    margin-top: auto;
 }
+
 .footer_nav {
     display: flex;
     justify-content: center;
@@ -425,6 +444,9 @@ th {
         padding: 0 0px;
         flex-direction: column-reverse;
     }
+    .location_container{
+        align-items: center;
+    }
     .location_info {
         display: flex;
         flex-direction: column;
@@ -488,7 +510,7 @@ th {
     flex-direction: column;
 }
 }
-@media (max-width: 500px) {
+@media (max-width: 570px) {
     .box__title {
         font-size: 3.5rem;
     }
@@ -496,10 +518,13 @@ th {
         font-size: 2.5rem;
     }
     .box {
-        width: 550px;
-        height: 350px;
+        width: 100%;
+        height: 100%;
     }
 }
+
+
+
 @media (max-width: 420px) {
     .header_logo {
         font-size: 3rem;
