@@ -14,11 +14,14 @@
           </nav>
           <div class="header__actions">
             <a class="header__button">
-              <img src="/img/cart.png" alt="Cart" class="header__icon">
+              <img src="@/assets/img/cart.png" alt="Cart" class="header__icon">
             </a>
-            <a class="header__button">
-              <img src="/img/profile.png" alt="Profile" class="header__icon">
-            </a>
+            <div class="header__profile-container">
+              <a class="header__button" @click="toggleDropdown">
+                <img src="@/assets/img/profile.png" alt="Profile" class="header__icon">
+              </a>
+              <ProfileDropdown :isOpen="isDropdownOpen" @close="closeDropdown" />
+            </div>
           </div>
         </div>
       </div>
@@ -54,20 +57,19 @@
                 placeholder="Name"
                 v-model="form.name"
                 @input="validateName"
-                :class="{ 'error': nameError }"
+                @blur="validateName"
                 required
               >
-              <span v-if="nameError" class="error-message">{{ nameError }}</span>
               <input 
                 type="tel" 
                 class="form_input" 
                 placeholder="Phone"
                 v-model="form.phone"
                 @input="formatPhone"
-                :class="{ 'error': phoneError }"
+                @blur="validatePhone"
+                maxlength="19"
                 required
               >
-              <span v-if="phoneError" class="error-message">{{ phoneError }}</span>
             </div>
             <input 
               type="email" 
@@ -75,10 +77,9 @@
               placeholder="Email"
               v-model="form.email"
               @input="validateEmail"
-              :class="{ 'error': emailError }"
+              @blur="validateEmail"
               required
             >
-            <span v-if="emailError" class="error-message">{{ emailError }}</span>
             <textarea 
               class="form_textarea" 
               placeholder="Message"
@@ -100,11 +101,11 @@
       </div>
     </div>
   </div>
-  <footer class="footer">
+ <footer class="footer">
 		<nav class="footer_nav">
 			<li><router-link to="/">Home</router-link></li>
       <li><router-link to="/About">About</router-link></li>
-      <li><router-link to="/store">STORE</router-link></li>
+      <li><router-link to="/store">Store</router-link></li>
       <li><router-link to="/location">Location</router-link></li>
 		</nav>
 		<p class="footer_text">Copyright &copy; 2025  All rights reserved - Style Avenue</p>
@@ -112,8 +113,13 @@
 </template>
 
 <script>
+import ProfileDropdown from '@/components/ProfileDropdown.vue'
+
 export default {
   name: 'Location',
+  components: {
+    ProfileDropdown
+  },
   data() {
     return {
       form: {
@@ -122,79 +128,23 @@ export default {
         email: '',
         message: ''
       },
-      nameError: '',
-      phoneError: '',
-      emailError: '',
-      showModal: false
+      showModal: false,
+      isDropdownOpen: false
     }
   },
   methods: {
-    validateName() {
-      const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
-      if (!nameRegex.test(this.form.name)) {
-        this.nameError = 'Name should contain only letters and spaces';
+    handleSubmit(event) {
+      // Get the form element
+      const form = event.target;
+      
+      // Check if the form is valid
+      if (form.checkValidity()) {
+        this.showModal = true;
+        this.resetForm();
       } else {
-        this.nameError = '';
+        // Trigger browser's default validation UI
+        form.reportValidity();
       }
-    },
-    formatPhone() {
-      // Get the current value without formatting
-      let value = this.form.phone.replace(/\D/g, '');
-      
-      // If the value is empty, clear the field
-      if (!value) {
-        this.form.phone = '';
-        this.phoneError = '';
-        return;
-      }
-      
-      // Format the phone number
-      let formatted = value.substring(0, 1);
-      if (value.length > 1) {
-        formatted += ' (' + value.substring(1, 4);
-      }
-      if (value.length > 4) {
-        formatted += ') ' + value.substring(4, 7);
-      }
-      if (value.length > 7) {
-        formatted += '-' + value.substring(7, 9);
-      }
-      if (value.length > 9) {
-        formatted += '-' + value.substring(9, 11);
-      }
-      
-      // Update the phone number
-      this.form.phone = formatted;
-      
-      // Validate phone number
-      const phoneRegex = /^\d \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
-      if (value.length > 0 && !phoneRegex.test(this.form.phone)) {
-        this.phoneError = 'Please enter a valid phone number';
-      } else {
-        this.phoneError = '';
-      }
-    },
-    validateEmail() {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(this.form.email)) {
-        this.emailError = 'Please enter a valid email address';
-      } else {
-        this.emailError = '';
-      }
-    },
-    handleSubmit() {
-      this.validateName();
-      this.formatPhone();
-      this.validateEmail();
-
-      if (this.nameError || this.phoneError || this.emailError) {
-        return;
-      }
-
-
-      this.showModal = true;
-      
-      this.resetForm();
     },
     resetForm() {
       this.form = {
@@ -203,29 +153,95 @@ export default {
         email: '',
         message: ''
       };
-      this.nameError = '';
-      this.phoneError = '';
-      this.emailError = '';
     },
     closeModal() {
       this.showModal = false;
+    },
+    validateName(event) {
+      const input = event.target;
+      const name = input.value.trim();
+      
+      // Check if name contains only letters and spaces
+      const nameRegex = /^[A-Za-z\s]+$/;
+      
+      if (name === '') {
+        input.setCustomValidity('Name is required');
+      } else if (!nameRegex.test(name)) {
+        input.setCustomValidity('Name can only contain letters and spaces');
+      } else {
+        input.setCustomValidity('');
+      }
+    },
+    validatePhone(event) {
+      const input = event.target;
+      const phone = input.value.trim();
+      
+      // Remove all non-digit characters to count digits
+      const digitsOnly = phone.replace(/\D/g, '');
+      
+      if (phone === '') {
+        input.setCustomValidity('Phone number is required');
+      } else if (digitsOnly.length !== 11) {
+        input.setCustomValidity('Phone number must contain exactly 11 digits');
+      } else {
+        input.setCustomValidity('');
+      }
+    },
+    validateEmail(event) {
+      const input = event.target;
+      const email = input.value.trim();
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (email === '') {
+        input.setCustomValidity('Email is required');
+      } else if (!emailRegex.test(email)) {
+        input.setCustomValidity('Please enter a valid email address');
+      } else {
+        input.setCustomValidity('');
+      }
+    },
+    formatPhone(event) {
+      const input = event.target;
+      let phone = input.value.replace(/\D/g, '');
+      
+      // Limit to 11 digits
+      if (phone.length > 11) {
+        phone = phone.substring(0, 11);
+      }
+      
+      // Format +Y (ABC) XXX-XX-XX
+      let formatted = '';
+      if (phone.length > 0) {
+        formatted = '+' + phone.substring(0, 1); 
+        if (phone.length > 1) {
+          formatted += ' (' + phone.substring(1, 4); // Region code
+          if (phone.length > 4) {
+            formatted += ') ' + phone.substring(4, 7); // First part of local number
+            if (phone.length > 7) {
+              formatted += '-' + phone.substring(7, 9); // Second part
+              if (phone.length > 9) {
+                formatted += '-' + phone.substring(9, 11); // Last part
+              }
+            }
+          }
+        }
+      }
+      
+      input.value = formatted;
+      this.form.phone = formatted;
+    },
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    },
+    closeDropdown() {
+      this.isDropdownOpen = false;
     }
   }
 }
 </script>
 
 <style scoped>
-.error {
-  border-color: red !important;
-}
-
-.error-message {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 5px;
-  display: block;
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -270,5 +286,25 @@ export default {
 
 .modal-button:hover {
   background-color: #C66A25;
+}
+
+.form_input_wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.form_errors {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.header__button {
+  cursor: pointer;
+}
+
+.header__profile-container {
+  position: relative;
 }
 </style> 

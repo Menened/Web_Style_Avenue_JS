@@ -14,11 +14,14 @@
           </nav>
           <div class="header__actions">
             <a class="header__button">
-              <img src="/img/cart.png" alt="Cart" class="header__icon">
+              <img src="@/assets/img/cart.png" alt="Cart" class="header__icon">
             </a>
-            <a class="header__button">
-              <img src="/img/profile.png" alt="Profile" class="header__icon">
-            </a>
+            <div class="header__profile-container">
+              <a class="header__button" @click="toggleDropdown">
+                <img src="@/assets/img/profile.png" alt="Profile" class="header__icon">
+              </a>
+              <ProfileDropdown :isOpen="isDropdownOpen" @close="closeDropdown" />
+            </div>
           </div>
         </div>
       </div>
@@ -93,10 +96,35 @@
 </template>
 
 <script>
+import ProfileDropdown from '@/components/ProfileDropdown.vue'
+
 export default {
-  name: 'About'
+  name: 'About',
+  components: {
+    ProfileDropdown
+  },
+  data() {
+    return {
+      isDropdownOpen: false
+    }
+  },
+  methods: {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen
+    },
+    closeDropdown() {
+      this.isDropdownOpen = false
+    }
+  }
 }
 </script>
 
 <style scoped>
+.header__button {
+  cursor: pointer;
+}
+
+.header__profile-container {
+  position: relative;
+}
 </style> 

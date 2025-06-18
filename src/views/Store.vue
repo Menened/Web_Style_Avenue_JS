@@ -14,11 +14,14 @@
           </nav>
           <div class="header__actions">
             <a class="header__button">
-              <img src="/img/cart.png" alt="Cart" class="header__icon">
+              <img src="@/assets/img/cart.png" alt="Cart" class="header__icon">
             </a>
-            <a class="header__button">
-              <img src="/img/profile.png" alt="Profile" class="header__icon">
-            </a>
+            <div class="header__profile-container">
+              <a class="header__button" @click="toggleDropdown">
+                <img src="@/assets/img/profile.png" alt="Profile" class="header__icon">
+              </a>
+              <ProfileDropdown :isOpen="isDropdownOpen" @close="closeDropdown" />
+            </div>
           </div>
         </div>
       </div>
@@ -135,8 +138,13 @@
 </template>
 
 <script>
+import ProfileDropdown from '@/components/ProfileDropdown.vue'
+
 export default {
   name: 'Store',
+  components: {
+    ProfileDropdown
+  },
   data() {
     return {
       currentQuestionIndex: 0,
@@ -149,6 +157,7 @@ export default {
       showResults: false,
       score: 0,
       errorMessage: '',
+      isDropdownOpen: false,
       questions: [
         {
           text: "Your name:",
@@ -325,6 +334,12 @@ export default {
       });
       this.showResults = false;
       this.score = 0;
+    },
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    },
+    closeDropdown() {
+      this.isDropdownOpen = false;
     }
   }
 }
@@ -334,7 +349,6 @@ export default {
 .store_container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .store_title {
@@ -380,22 +394,31 @@ export default {
   background-color: #F7E3D4;
   padding: 1.5rem;
   border-radius: 8px;
-  max-width: 500px;
+  width: 400px;
   margin: 0 auto;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  align-items: center;
 }
 
 .question_text {
   font-family: 'Arvo Regular', sans-serif;
   color: #542B0D;
   margin-bottom: 1rem;
+  height: 40px;
 }
 
 .options_container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
+  flex: 1;
+  padding: 0 1rem;
 }
 
 .option_label {
@@ -424,7 +447,7 @@ export default {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: auto;
 }
 
 .form_button {
@@ -452,14 +475,14 @@ export default {
 }
 
 .form_input {
-  width: 80%;
-  max-width: 300px;
+  width: 100%;
+  max-width: none;
   padding: 0.8rem;
   border: 1px solid #D87830;
   border-radius: 4px;
   font-family: 'Arial', sans-serif;
   font-size: 1rem;
-  margin: 0 auto;
+  margin: 0;
   display: block;
 }
 
@@ -502,5 +525,31 @@ export default {
 .input_error {
   border-color: #D87830;
   background-color: rgba(216, 120, 48, 0.05);
+}
+
+
+@media (max-width:470px){
+    .quiz_question {
+        width: 350px;
+    }
+}
+@media (max-width:420px){
+    .quiz_question {
+        width: 300px;
+    }
+}
+@media (max-width:360px){
+    .quiz_question {
+        width: 250px;
+        gap: 20px;
+    }
+}
+
+.header__button {
+  cursor: pointer;
+}
+
+.header__profile-container {
+  position: relative;
 }
 </style> 

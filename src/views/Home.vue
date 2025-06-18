@@ -1,5 +1,6 @@
 <template>
   <div class="body">
+    <BackgroundSlider />
     <header class="header">
       <div class="header_container">
         <h1 class="header_logo">Style Avenue</h1>
@@ -14,11 +15,14 @@
           </nav>
           <div class="header__actions">
             <a class="header__button">
-              <img src="/img/cart.png" alt="Cart" class="header__icon">
+              <img src="@/assets/img/cart.png" alt="Cart" class="header__icon">
             </a>
-            <a class="header__button" @click="toggleSlider">
-              <img src="/img/profile.png" alt="Profile" class="header__icon">
-            </a>
+            <div class="header__profile-container">
+              <a class="header__button" @click="toggleDropdown">
+                <img src="@/assets/img/profile.png" alt="Profile" class="header__icon">
+              </a>
+              <ProfileDropdown :isOpen="isDropdownOpen" @close="closeDropdown" />
+            </div>
           </div>
         </div>
       </div>
@@ -32,29 +36,30 @@
         </div>
       </div>
     </main>
-    <HeaderSlider :isOpen="isSliderOpen" @close="closeSlider" />
   </div>
 </template>
 
 <script>
-import HeaderSlider from '@/components/HeaderSlider.vue'
+import ProfileDropdown from '@/components/ProfileDropdown.vue'
+import BackgroundSlider from '@/components/BackgroundSlider.vue'
 
 export default {
   name: 'Home',
   components: {
-    HeaderSlider
+    ProfileDropdown,
+    BackgroundSlider
   },
   data() {
     return {
-      isSliderOpen: false
+      isDropdownOpen: false
     }
   },
   methods: {
-    toggleSlider() {
-      this.isSliderOpen = !this.isSliderOpen
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen
     },
-    closeSlider() {
-      this.isSliderOpen = false
+    closeDropdown() {
+      this.isDropdownOpen = false
     }
   }
 }
@@ -63,5 +68,9 @@ export default {
 <style scoped>
 .header__button {
   cursor: pointer;
+}
+
+.header__profile-container {
+  position: relative;
 }
 </style> 
